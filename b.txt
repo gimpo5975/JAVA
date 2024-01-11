@@ -1,6 +1,0 @@
-<<<<<<< HEAD
-bee
-airplane
-=======
-b
->>>>>>> parent of 7ba83bc (수정1)
