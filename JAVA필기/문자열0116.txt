@@ -1,0 +1,68 @@
+★문자열★
+ 
+
+1. String 클래스의 객체 생성
+
+  -String 참조변수명 = new String("문자열");  //문자열을 새롭게 생성
+  -String 참조변수명 = "문자열"  //같은 문자열 끼리는 객체를 공유함
+  -String 클래스만의 특징
+    -문자열 : 반드시 ""로 묶는다
+    -객체내의 값 변경불가능, 값을 변경시 새로운 객체를 생성하여 작성
+    -String을 제외한 참조 타입은 객체 내의 값을 변경할 수 있음
+
+str1 == str2	false
+str2 == str3	true
+str1 == str4	false
+
+new연산자는 힙에 새로운 객체를 생성시키기 때문에
+String 참조변수가 가르키는 번지 주소가 다르기 때문에 false가 나온다,
+하지만 str2, str3의 경우에는 같은 번지를 참조하므로 true가 된다.
+
+★ String객체의 '+' 연산
+
+ 문자열 + 문자열 => 문자열
+ 문자열 + 기본자료형 => 문자열
+
+★String 클래스의 주요 메소드
+
+length() : 문자열의 길이
+String str = "홍길동";
+System.out.println(str.length());  => 3
+
+charAt() : 문자열에서 특정 인덱스 위치에 있는 문자하나를 추출 //인덱스 번호 0번부터 시작
+
+indexOf() : 문자열에서 특정 문자나, 특정 문자열의 위치를 앞에서부터 찾아 그 위치를 알려준다. 인덱스 번호 0번부터 시작
+
+lastIndexOf() : 문자열에서 특정 문자나, 특정 문자열의 위치를 뒤에서 찾아 그 위치를 알려준다.
+
+String.valueOf() ; 기본 자료형을 문자열로 바꾸는 정적(static) 메소드
+
+concat() : 2개의 문자열을 연결, +연산자와 동일한 기능
+String str1 = "king";
+String str2 = "원중";
+String str3 = str2.concat(str1); // "원중king";
+
+toLowerCase() : 소문자로 변환
+String str = "Hello java";
+
+System.out.println(str.toLowerCase();  //  "hello java"
+toUpperCase() : 소문자로 변환
+
+String str = "hello java";
+System.out.println(str.toUpperCase();  //  "HELLO JAVA"
+
+replace() : 일부 문자열을 다른 문자열로 대체
+String str = "HELLO java";
+System.out.println(str.replace("LLO", "★"));  // "HE ★ java";
+
+substring() : 문자열의 일부만을 포함하는  새로운 문자열 객체를 생성 뽑아 낼려는 문자보다 +1해야한다
+substring(시작인덱스=0, 마지막인덱스+1) // 시작인덱스 부터 마지막 인덱스 까지 추출
+
+split() : 특정 기호를 기준으로 문자열을 분리
+ String str = "abc/def-21/a   b";  //배열로 처리
+ String[] splitStr = str.split("/|-| "); // / 또는 - 또는 공란으로 구분된 문자열을 배열에 저장
+
+trim() : 문자열의 좌우 공백을 제거
+String str = "          ab           cd            ef             ";
+System.out.println(str.trim());  //  "ab        cd       ef";  =>  중간공백은 없애지 못한다!
+
