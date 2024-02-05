@@ -1,0 +1,129 @@
+1. Exception과 Error의 차이점
+	1) Error : 프로그램 코드에 의해서 수습할 수 없는 심각한 오류
+			메모리 부족, thread 죽음,...
+	2) Exception : 사용자의 잘못된 조작 또는 개발자의 잘못된 코딩으로
+				발생하는 프로그램 오류
+				프로그램 코드에 의해서 수습될 수 있는 다소 미약한 오류
+
+2. 예외 클래스의 일반예외, 실해예외
+	1)일반예외(Checked Exception) : 컴파일 전에 체크, 컴파일자체가 불가
+	Exception
+		ClassNotFoundException
+		InterruptedException
+		IOException
+		FileNotFoundException
+
+	2) 실행예외(UnChecked Exception = RuntimeException) : 실행시 체크
+				컴파일에는 문제 없지만 실행하다 예외가 발생하면
+				프로그램이 종료됨
+	Exception
+			ArihmetocException => 수학적으로 문제 있을 때
+			ClassCastException =>  타입변환이 잘못 되었을 때
+			NullPointerException
+
+3. 예외처리 : 예외 처리하면 정상 실행 가능
+		try{
+			예외가 발생할 가능성 있는 구문
+		}catch(예외클래스명 참조변수명){
+				예외처리 블록
+		}
+
+===============================================================
+
+		try{
+			예외가 발생할 가능성 있는 구문
+		}catch(예외클래스명 참조변수명){
+				예외처리 블록
+		}finally{
+			예외 발생여부와 상관없이 무조건 실행하는 블록
+		}
+
+===============================================================
+
+4. Throwable 클래스의 주요 메소드
+	getMessage() : Throwable 객체의 자세한 메시지를 반환
+	toString() : Throwable 객체의 간단한 메시지를 반환
+	printStackTrace() : Throwable 객체와 예외 추적 정보를 콘솔 뷰에 출력
+
+5. 다중 예외 처리
+	※ try ~ catch 블록을 여러 개 사용 가능
+	※ 발생한 예외 객체를 받을 수 있는 catch 블록 실행
+	※ 위에서 아래로 실행, 범위가 좁은 것 부터 써야 함
+
+	try{
+			예외가 발생할 가능성 있는 구문
+		}catch(예외클래스명 참조변수명){
+				예외처리 블록
+		}catch(예외클래스명 참조변수명){
+				예외처리 블록
+		}catch(예외클래스명 참조변수명){
+				예외처리 블록
+		}finally{
+			예외 발생여부와 상관없이 무조건 실행하는 블록
+		}
+
+
+6. 리소스 자동해제 예외 처리
+	try(리소스를 사용하는 코드;){
+	}catch(예외클래스명 참조변수명){
+
+	}
+
+7. 예외의 전가(throws)
+		예외처리를 자신이 호출된 지점으로 전가(떠넘기기)
+		이 경우 예외처리는 전가 받은 상위 위치에서 처리
+		메소드명(매개변수) throws 예외 클래스
+		리턴타입 메소드명(입력매개변수) throws 예외클래스명 {예외발생코드}
+
+		
+★Class 클래스 
+	클래스와 인터페이스의 메타 데이터를 관리
+	클래스 이름, 생성자 정보, 필드 정보, 메소드 정보 => 메타 데이터
+
+☆ Wrapper 클래스
+	기본타입(byte, short, int, long, float, double, char, boolean)은 객체를 생성할 수 없음
+	기본 타입을 포장해서 객체를 생성할 수 있게 하는 것
+ 	이런 객체를 Wrapper Class라고 함.
+ 	기본 타입을 내부에 두고 포장만 하기 때문
+	 포장하고 있는 기본 타입은 외부에서 변경할 없다.
+ 	내부의 값을 변경하려면 새로운 포장객체를 만들어야 함
+
+	박싱(Boxing) : 기본 타입의 값을 포장 객체로 만드는 과정
+ 	언박싱(Unboxing) : 포장 객체에서 기본타입의 값을 얻어내는 과정
+ 	자동 박싱과 자동 언박싱
+
+      기본타입   Wrapper Class
+      byte      Byte
+      char      Character
+      short      Short
+      int      Integer
+      long      Long
+      float      Float
+      double      Double
+      boolean      Boolean
+   
+      Integer intObj = new Integer(10);   //박싱
+      unBoxingInt = intObj.IntValue();   //언박싱
+
+      Double doubleBoxing = 23.5;  //자동 박싱
+      double unBoxingDouble = doubleBoxing; //자동 언박싱
+      
+      double value = doubleBoxing + 50; //자동 언박싱 
+
+★ Math 클래스
+   - 수학 계산에 사용할 수 있는 메소드를 제공
+   Math.abs(값) - 절대값
+   Math.max(값1, 값2) :  값1과 값2의 값을 비교해서 더 큰값
+   Math.min(값1, 값2) : 두 값중에서 작은 값
+   Math.ceil(double value) : 올림
+   Math.floor(double value) : 버림
+   Math.round(double value) : 반올림
+   Math.random() ; 난수 발생
+
+	
+
+
+
+
+
+
