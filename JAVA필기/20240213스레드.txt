@@ -1,0 +1,150 @@
+1. program : C드라이브에 설치된 소프트웨어
+   process : 실행 중인 프로그램, 메모리에 로딩된 프로그램
+   	하나 - single process,  두개이상 -  Multi process
+	프로세스는 적어도 하나의 스레드를 가진다.
+   Thread : 하나의 실행 흐름으로 프로세스 내부에 존재
+
+2. 쓰레드의 동시성(concurrency)과 병렬성(parallelism)
+	- 단일 thread로 2개의 작업을 처리할 때 각 작업은 순차적으로 처리됨
+	   먼저 작업이 완전히 종료된 이후에 두 번째 작업이 실행되는 것
+
+	- multi thread : 동시성과 병렬성을 가지고 있음
+		동시성과 병렬성을 활용해 여러 작업을 동시에 실행하거나 동시에 실행되는 것 처럼 보이게 하는 것
+
+	1) 동시성 (concurrency)
+		- 처리할 수 작업의 수가 cpu의 코어 수보다 많을 때 : cpu는 각 작업 쓰레드의 요청 작업을 번갈아가면서 실행
+		 	매우 짧은 간격으로 교차 실행하기 때문에 사용자는 두 작업이 마치 동시에 실행되는 것 처럼 보이는 것(시분할 처리)
+
+		 
+	2) 병렬성(parallelism)
+		- 처리할 작업의 수보다 cpu의 코어 수가 더 많을 때 : 각각의 작업을 각각의 코어에 할당해 동시에 시행할 수 있기 때문에
+			동시에 작업이 수행됨
+
+3. Thread 생성 및 실행
+	- 방법1 : Thread Class를 상속받아 run() 메소드를 재정의(overriding)
+	- 방법2 : Runnable interface 구현 -> 추상메소드인  run() 구현 => Thread 생성자로 Runnable 객체 전당
+	- java가 이렇게 쓰레드 생성에 두 가지 방법으로 사용하는 이유는 단일 상속을 지원하기 때문
+	  다른 클래스를 이미 상속 받고 있다면 Thread 클래스를 상속받을 수 없기 때문에 쓰레드를 생성할 수 없음
+
+	1) 방법 1 : Thread class를 상속받아 run()메소드 재정의(overriding)
+		* 방법 1  Thread class를 상속받아 run()메서드 재정의
+
+			1-1) 클래스 정의 : 쓰레드 클래스를 상속받아 run() 메소드를 재정의(overriding)한 
+						클래스 또는 익명 이너 클래스로 정의>
+				class MyThread extends Thread{
+					@Override
+					public void run(){
+						쓰레드 작업 내용
+					}
+				}
+
+			1-2) 객체 생성 : Thread 객체 생성 >
+				Thread myThread = new MyThread();
+				또는 
+				MyThread myThread = new MyThread();
+
+			1-3) 쓰레드 실행 : start() 메소드를 이용해 쓰레드 실행 >
+				myThread.start();   // 멀티쓰레드
+				// myThread.run();  // run()을 호출해도 오류는 없지만 단일 쓰레드로 동작
+			
+			- start() : 새로운 쓰레드 생성/추가하기 위한 모든 준비 + 새로운 쓰레드 위에 run() 실행
+			- 쓰레드의 내부에 run()메서드가 있기 때문에 run()을 직접 호출해도 오류는 발생하지 않음
+				다만 이때 별도의 쓰레드가 아닌 현재의 쓰레드에서 일반 메서드처럼 실행됨
+
+	2)방법2 :  Runnable interface 구현
+ 			Runnable interface 구현(추상메서드(run()) 구현)
+			=> Thread 생성자로 Runnable 객체 전달
+			2-1) 클래스 정의 : Runnable 인터페이스를 구현한 클래스 정의
+					추상메서드 run() 구현
+				
+				class MyRunnable implements Runnable{
+					@Override
+					public void run(){
+						쓰레드 작업 내용
+					}
+				}
+
+			2-2) 객체 생성 :  Runnable 객체 생성 -> Thread 객체 생성(생성자에 Runnable 객체 전달)
+				Runnable runable = new MyRunnable();
+				또는
+				MyRunnable r = new MyRunnable();  
+				// Runnable은 함수적 인터페이스(추상메소드 하나만 가진 인터페이스)로 내부에 start()메소드 없어 오류 발생 따라서 Thread 객체 필요
+				// Thread 생성자의 매개변수로 전달
+
+				Thread myThread = new Thread(r); 
+
+			2-3) 쓰레드 실행 : start()메서드를 이용해 쓰레드 실행
+				myThread.start();
+
+	3) 방법3 :
+		new Thread(){
+			public void run(){
+
+			}
+		}.start()
+
+
+4. 데몬 쓰레드(daemon thread)
+	일반적으로 쓰레드는 독립적으로 수행되기 때문에 메인 쓰레드를 종료해도 
+	작업 쓰레드는 계속 실행됨
+	(어떤 쓰레드는 다른 쓰레드의 보조작업을 수행하기 때문에(한글문서작업(주) , 자동 저장(보조)) 
+ 	 주된 쓰레드가 종료되면 보조 쓰레드는 더이상 존재할 이유가 없음, 그런데 주된 쓰레드가 종료되어도
+	보조 작업 쓰레드가 종료되지 않는 경우 있음)
+	다른 쓰레드가 종료되면 자동으로 종료되어야하는 쓰레드(주된쓰레드가 종료되면 보조 작업 쓰레드도 종료되어야 함)
+	다른 쓰레드가 종료되면 자동으로 종료되는 쓰레드를 데몬 쓰레드라고 함
+	우선순위가 가장 낮음
+	주된 쓰레드에서 데몬쓰레드를 실행시킴
+
+	void setDaemon(boolean status)  : 데몬 쓰레드 여부를 설정.  true - 데몬쓰레드로 사용, false(데몬 쓰레드가 아님)
+				      start() 메소드 호출전에 사용해야 함
+
+
+5. 쓰레드의 동기화
+	- 임계영역(critical section) :  다수의 쓰레드가 공유 자원을 참조하는 코드 영역
+	- 동기화 : 다수의 쓰레드가 공유 자원을 충돌 없이 사용할 수 있도록 공유 자원에 
+		배타적이고 독점적으로 접근할 수 있는 방법
+	- 임계영역을 동기화 시키는 방법
+		.메소드에 synchronized 키워드를 지정
+			public synchronized void 메소드(){ 임계영역 코드 }
+
+		. 코드의 일부에 synchronized 키워드를 지정
+			synchronized(공유객체) { 임계영역 코드 }	
+
+
+6. 대기와 통보, 생명주기
+	쓰레드 스케줄링  :  jvm은 쓰레드의 개수, 쓰레드의 상태, 우선순위 등 쓰레드와 관련된 모든 정보를 관리
+			쓰레드 객체를 생성하고 start() 메소드를 호출해서 jvm에게 해당 쓰레드를 스케줄링
+			해달라고 요청
+	생명주기 :  	start()메소드를 호출하면 쓰레드는 실행 대기 상태가 되고 -> jvm이 실행대기 상태에
+			있는 쓰레드 중에서 하나늘 실행 상태로 만들어 run()메소드를 실행
+			실행 상태의 메소드는 실행 도중에 다시 실행 대기 상태로 돌아갈 수도 있고 실행을 
+			종료할 수도 있음, 또 실행을 일시 중시하는 상황도 있을 수 있음
+	
+
+	ex) 요리사(Cook)와 손님(Customer)의 관계 - 쓰레드의 협업
+	     요리(Dish)는 5개를 만들어 제공할 예정, 손님도 5가지의 요리를 먹을 것임
+	    요리한 음식이 없을 때는 요리사가 요리를 해야 고객이 음식을 먹을 수 있고, 
+	    한 번에 한 접시씩 요리사와 고객 사이에 오고 간다고 가정
+	    음식은 공유 자원이 되고, 요리사와 고객은 쓰레드
+	   고객은 음식을 먹은 후 요리사에게 통보(notify())해야 하고, 요리된 음식이 없다면 대기(wait())해야 함
+	   요리사는 음식을 요리 한 후 고객에게 통보(notify()) 해야하고, 요리된 음식을 고객이 먹고 있다면 대기(wait())
+	
+
+	wait()
+	notify()
+	notifyAll()
+
+
+7. 쓰레드 풀(thread pool)
+	- 동시에 실행하는 쓰레드의 개수 제한
+	- 제한된 개수의 쓰레드를 JVM이 관리하도록 맡기는 방식
+	- 개발자가 쓰레드를 생성할 필요가 없음
+	  실행할 작업을 쓰레드 풀에 전달하면 JVM이 쓰레드 풀의 
+	  유휴 쓰레드중 하나를 선택해서 쓰레드를 실행
+	 
+	   ExecutorService exec = Executors.newCachedThreadPool();
+	   exec.execute("쓰레드객체");
+
+	   맨 마지막에   exec.shutdown();
+	      void shutdown() : 현재 처리 중인 작업과 남아 있는 모든 작업을 처리한 후 쓰레드 풀 종료
+	      List<Runnable> shutdownNow() : 현재 처리 중인 작업을 중지시키고 쓰레드 풀을 종료
