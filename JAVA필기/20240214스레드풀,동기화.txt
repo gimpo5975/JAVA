@@ -1,0 +1,84 @@
+☆Java의 스레드 풀 및 동기화 이해★
+
+
+<스레드 풀이란 무엇입니까?>
+
+스레드 풀은 작업을 동시에 실행할 준비가 되어 있는 사전 초기화된 스레드 모음입니다. 각 작업에 대한 스레드를 생성하고 삭제하는 대신 스레드 풀은 재사용 가능한 스레드 풀을 유지 관리하므로 동시 애플리케이션의 오버헤드를 줄이고 성능을 향상시키는 데 도움이 됩니다.
+
+<스레드 풀의 이점>
+
+▣ 리소스 효율성: 스레드 풀은 기존 스레드를 재사용하여 스레드를 반복적으로 생성하고 삭제하는 오버헤드를 줄입니다.
+
+▣ 향상된 성능: 작업 제출 및 실행이 간소화되어 동시 애플리케이션의 성능이 향상됩니다.
+▣ 리소스 소비 제어: 스레드 풀은 활성 스레드 수를 제어하여 리소스 소진을 방지하는 데 도움이 됩니다.
+
+<Java에서 스레드 풀 사용>
+Java는 스레드 풀 관리를 위한 Executor 프레임워크를 제공합니다. ThreadPoolExecutor와 같은 클래스나 Executors 클래스의 유틸리티 메서드를 사용하여 다양한 유형의 스레드 풀을 생성할 수 있습니다.
+
+다음은 Java에서 스레드 풀을 사용하는 기본 예입니다.
+
+▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ThreadPoolExample {
+    public static void main(String[] args) {
+        // Create a fixed-size thread pool with 5 threads
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+
+        // Submit tasks to the thread pool
+        for (int i = 0; i < 10; i++) {
+            executor.submit(new Task());
+        }
+
+        // Shutdown the thread pool
+        executor.shutdown();
+    }
+}
+
+class Task implements Runnable {
+    @Override
+    public void run() {
+        // Task logic goes here
+        System.out.println("Task executed by thread: " + Thread.currentThread().getName());
+    }
+}
+▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣
+
+★동기화☆
+
+<동기화란 무엇인가요?>
+
+Java의 동기화는 안전하고 질서 있는 방식으로 공유 리소스에 액세스할 수 있도록 여러 스레드를 조정하는 것을 의미합니다. 동시 프로그래밍에서 여러 스레드가 동시에 공유 데이터에 액세스하면 경쟁 조건과 데이터 불일치가 발생할 수 있습니다. Java의 동기화 메커니즘은 한 번에 하나의 스레드만 공유 리소스에 액세스하도록 허용하여 이러한 문제를 방지하는 데 도움이 됩니다.
+
+<동기화의 이점>
+
+▣ 스레드 안전성: 동기화는 스레드로부터 안전한 방식으로 공유 리소스에 액세스하도록 보장하여 데이터 손상 및 경합 상태를 방지합니다.
+▣ 일관성: 동기화는 스레드 간에 특정 액세스 순서를 적용하여 공유 데이터의 일관성을 유지하는 데 도움이 됩니다.
+▣ 동시성 제어: 동기화를 통해 공유 리소스에 대한 동시 액세스를 세밀하게 제어할 수 있어 스레드 간의 효율적인 조정이 가능합니다.
+
+<Java에서 동기화 사용>
+
+Java는 java.util.concurrent 패키지의 동기화된 메소드, 동기화된 블록 및 명시적 잠금을 포함하여 여러 가지 동기화 메커니즘을 제공합니다.
+
+다음은 Java에서 동기화를 사용하는 예입니다.
+
+▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣
+public class Counter {
+    private int count = 0;
+
+    // Synchronized method to increment the count
+    public synchronized void increment() {
+        count++;
+    }
+
+    // Synchronized method to get the current count
+    public synchronized int getCount() {
+        return count;
+    }
+}
+▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣
+
+<결론>
+스레드 풀과 동기화는 Java 동시성 프로그래밍의 필수 개념입니다. 스레드 풀은 동시 작업을 효율적으로 관리하는 데 도움이 되며, 동기화는 공유 리소스에 대한 스레드로부터 안전한 액세스를 보장합니다. 이러한 개념을 이해하고 효과적으로 사용하는 것은 안정적이고 확장 가능한 동시 Java 애플리케이션을 구축하는 데 중요합니다.
+
