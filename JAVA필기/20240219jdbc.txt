@@ -1,0 +1,60 @@
+
+1. JDBC (Java Database Connectivity)
+    - 자바에서 데이터베이스에 접속할 수 있도록 하는 자바 API로,
+      데이터베이스에서 자료를 쿼리하거나 업데이트하는 방법을 제공 (위키백과)
+     1) JDBC 표준 인터페이스
+              연결 - Connection  (java.sql.Connection)
+              SQL 전달 - Statement, PreparedStatement,CallableStatement (java.sql.Statement, java.sql.PreparedStatement,...)
+              결과 응답 - ResultSet (java.sql.ResultSet)
+       2) JDBC Driver
+              JDBC 인터페이스를 통해 실제로 DB와 작업하는 라이브러리
+              JDBC 인터페이스를 구현한 것으로 DBMS마다 별도로 다운로받아 사용해야 
+              MySQL DB에 접근할 수 있는 것은 MySQL JDBC Driver, 
+              Oracle DB에 접근할 수 잇는 것은 Oracle JDBC Driver
+                ...
+
+          3) MySQL Driver 사용
+                <애플리케이션 서버>                                                                   
+              애플리케이션 로직──────> JDBC 표준 인터페이스
+                                          ▲
+                                          |
+                                          |           ───────────1. 커넥션 연결──────> MySQL
+                                      MySQL 드라이버   ───────────2. SQL 전달 ───────>  DB  
+                                                      <──────────3. 결과 응답 
+
+              * 애플리케이션 로직은 jdbc 표준 인터페이스에만 의존
+2. JDBC 직접 사용
+      jdbc를 직접 사용할 경우 애플리케이션 로직은  sql전달을 jdbc에게 전달
+                          SQL전달
+        애플리케이션 로직 ─────────────────> jdbc
+
+3. SQL Mapper(스프링 jdbcTemplate, MyBatis(iBatis)...)
+                          SQL전달
+        애플리케이션 로직 ─────────────────> SQL Mapper ─────────────────> jdbc
+      장점 : sql응답 결과를 객체로 편리하게 변환 및 jdbc 반복코드를 제거하고, 개발자가 sql을 직접 작성하면
+             나머지는 SQL Mapper가 처리, jdbc를 편리하게 사용하도록 도와줌
+      단점 : 개발자가 sql을 직접 작성해야 함
+
+4. ORM(Object Relational Mapping) 기술
+    - 객체 관계 매핑은 데이터베이스와 객체 지향 프로그래밍 언어 간의 호환되지 않는 데이터를 변환하는 프로그래밍 기법이다. 
+      객체 지향 언어에서 사용할 수 있는 "가상" 객체 데이터베이스를 구축하는 방법이다. 위키백과
+    - jpa(java persistence API, ORM 표준인터페이스), 하이버네이트, 이클립스 링크 등
+    - ORM은 객체를 관계형 데이터베이스 테이블과 매핑해주는 기술로, 개발자는 반복적인 sql을 직접 작성하지 않고, orm 기술이
+      개발자 대신에 sql을 동적으로 만들어 실행시켜준다.  또한 각 데이터베이스만다 다른 sql을 사용하는 문제도 중간에서 해결
+
+                          객체 전달                                                                       SQL전달 
+        애플리케이션 로직 ─────────────────> JPA <───────────────── JPA 구현체(하이버네이트, 이클립스링크) ─────────────────> JDBC
+       
+===============================================
+
+ 5. MySQL JDBC 연결
+  1) mysql 준비 
+          a. Connection/j 설치
+            C:\Program Files (x86)\MySQL\Connector J 8.0 폴더에서 mysql-connector-java-8.0.27.jar 파일 복사
+          b. jdk 버전\lib 폴더에 붙여넣기
+          c. WebContent/WEB-INF/lib/ 폴더에도 붙여넣기(Dynamic Web Project로 프로젝트 생성하면 생김)
+                Build Path 설정 - Configure Build Path - Libraries -> ClassPath -> Add External JARs...
+                              mysql-connector-java-8.0.27.jar - C:\Java\jdk-17.0.4\lib  (또는 C:\Program Files\Java\jdk-17.0.4\lib)     
+                또는 Build Path - Add to Build Path
+          d. mysql열어서 db 생성 -> 테이블 만들기
+  2) 프로젝트명 - src/main/java  - dbconnection 패키지 만들기
