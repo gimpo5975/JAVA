@@ -1,0 +1,116 @@
+과정명 : 클라우드 데브옵스 프론트앤드 & 백앤드 자바(JAVA) 풀스택 개발자 취업캠프
+과목명 : 클라우드 데이터베이스 구축 및 활용
+
+성명 : 김원중
+
+1. 다음 설명에 해당하는 용어를 쓰시오.
+    [ 데이터베이스를 관리하고 운영하는 소프트웨어로, 
+	다양한 데이터가 저장되어 있어있는 DB는 여러 명의 사용자나 응용 프로그램과 공유하고 동시에 접근이 가능해야한다]
+DBMS
+
+2. 다음은 데이터베이스 구현과정이다. ( )안에 알맞은 용어를 쓰시오.
+    요구사항 -> 요구분석 -> (  ①     개념적 설계           ) -> ( ② 논리적 설계                 ) -> (   ③ 물리적 설계                     )  -> 데이터베이스 구현
+
+3. shopdb라는 데이터베이스를 생성하는 SQL문이다. 다음을 완성하시오.
+	(  ①      create database                     ) shopdb;
+
+4. shopdb라는 데이터베이스를 삭제하는 SQL문이다. 다음을 완성하시오.
+	(  ①       drop database                    ) shopdb;
+
+5. productTBL 테이블을 생성하는 SQL문이다. 다음을 완성하시오.
+	pcode는 기본키 입니다.
+(  ①   creatre table                        ) productTBL( 
+	pcode char(10) (  ②      primary key                     ),
+    pname varchar(100) not null,  -- 오라클 : varchar2(100)
+    price int not null,   -- 오라클 : number, number(크기), int
+    region varchar(100) not null
+ );
+
+답 : ①	create table			 ②primary key
+
+
+6.  porderTBL 테이블에서는 productTBL 테이블의  pcode를 참조한다.  다음 SQL문를 완성하시오.
+  create table porderTBL( 
+    orderid integer primary key ,
+    orderDate date not null,
+    pcode char(10) ,    -- foreign key(외래키,FK)
+    custid char(5),    -- foreign key(외래키,FK)
+    amount int not null,
+    (  ①                           ),
+    (  ②                           )
+);
+
+답 : ①	add constraint pcode_FK foreign key (pcode) references productTBL(pcode)				 ②add constraint custid_FK foreign key (custid) references customerTBL(custid)	
+
+7. 다음은 제약 조건을 추가하는 SQL문입니다. 다음 SQL문를 완성하시오.
+	(   ①       alter               ) table porderTBL 
+			add constraint custid_FK foreign key (custid) references customerTBL(custid)	
+
+8. 다음은 테이블을 검색하고 자료를 삽입하는 SQL문입니다. 다음 SQL문를 완성하시오.
+  --  자료 검색
+	(    ①                        ) pcode, pname, price, region   (  ②                        ) porderTBL;
+-- 자료 삽입 
+      (    ③                        ) productTBL(pcode, pname, price, region)  (  ④                     ) ('ba123','바나나',2300,'필리핀');	
+
+답 : ①	select		 ②from
+     ③            insert into             ④values
+
+9. 다음은  porderTBL테이블에서 custid가 'c1'인 자료를 모두 삭제하는 SQL문입니다.  다음 SQL문를 완성하시오.
+   (    ①        delete custid from                )  porderTBL(  ②                        );
+답 : ①		delete custid from	 ②where custid = 'c1'
+
+10. productTBL 테이블에서 price가 2000이상인 제품들의 region을 '대구'로 변경하는 SQL문를 작성하시오.
+ 답: update producttbl set region = '대구' where price >=2000;
+
+11. 다음은 porderTBL 테이블에서 amount의 합계, 평균, 최댓값을 구하는 SQL문입니다. 다음 SQL문를 완성하시오.
+    select  (    ①                        )  as 합계, (  ②                        ) as 평균,(    ③                        )    from porderTBL;
+
+답 : ①	sum(amount)		 ②     avg(amount)                            ③    max(amount) as   최댓값                      
+
+
+12. 다음은 porderTBL 테이블에서 고객 코드(custid)별 구매수량(amount)의 합계를 구하되, 
+    수량(amount)이 20이상인 고객들을 대상으로 구하는 SQL문입니다. 다음 SQL문를 완성하시오.
+
+select custid, sum(amount) as 합계
+from porderTBL
+(    ①                        ) 
+ (  ②                        )
+답 : ①where amount>=20			 ②   group by custid
+
+
+13. 다음은 pordertbl 테이블을 이용하여 order_view 뷰를 만드는 SQL문입니다. 다음 SQL문를 완성하시오.
+    뷰에는  orderDate, amount 만 보여지게
+
+	(  ①                        )  order_view 
+	 (  ②         )
+		select orderdate, amount 
+		from  pordertbl ;
+
+답 : ①create view			 ②   as
+
+14. 다음이 설명하는 이상현상을 쓰시오.
+	(  ①                        )  : 투플 삭제 시 같이 저장된 다른 정보까지 연쇄적으로 삭제되는 현상, 연쇄삭제(triggered deletion) 문제 발생
+	(  ②                        ) : 투플 삽입 시 특정 속성에 해당하는 값이 없어 NULL 값을 입력해야 하는 현상, NULL 값 문제 발생
+	(  ③                        )  : 투플 수정 시 중복된 데이터의 일부만 수정되어 데이터의 불일치  문제가 일어나는 현상, 불일치(inconsistency) 문제 발생
+답 : ①	삭제이상		 ②    삽입이상                             ③     수정이상                    
+
+15. 다음이 설명하는 용어를 쓰시오.
+[ 
+  - 이상현상이 발생하는 릴레이션을 분해하여 이상현상을 없애는 과정
+  - 이상현상이 있는 릴레이션은 이상현상을 일으키는 함수 종속성의 유형에 따라 등급을 구분 가능
+  -  릴레이션은 정규형 개념으로 구분하며, 정규형이 높을수록 이상현상은 줄어듦
+]
+답 : 정규화
+
+
+16.  다음이 설명하는 용어를 쓰시오.
+     (                          ) : DBMS에서 데이터를 다루는 논리적인 작업의 단위
+ 답 : 트랜잭션
+
+17. 다음은 트랜잭션에 대한 설명이다. 다음에 알맞은 용어를 쓰시오.
+(  ①                        )  : 트랜잭션에 포함된 작업은 전부 수행되거나 아니면 전부 수행되지 않아야 (all or nothing) 함
+(  ②                        ) : 트랜잭션을 수행하기 전이나 수행한 후나 데이터베이스는 항상 일관된    상태를 유지해야 함
+고립성(Isolation) : 수행 중인 트랜잭션에 다른 트랜잭션이 끼어들어 변경 중인 데이터 값을 훼손하는 일이 없어야 함
+(  ③                        )  : 수행을 성공적으로 완료한 트랜잭션은 변경한 데이터를 영구히 저장해야 함
+
+답 : ①원자성			 ②  일관성                               ③    지속성
