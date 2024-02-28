@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+section.container{
+	padding-left:0px;
+}
+
+/*테이불 가운데 정렬*/
+table{
+	margin:0 auto;
+}
+/*표 제목 넓이 조정*/
+th{
+	width: 270px;
+	font-size: 1.2rem;
+}
+/*표 입력칸 넓이 조정*/
+td{
+	width: 350px;
+	padding-left: 7px;
+}
+/*정보 입력칸 넓이와 높이 조정*/
+input{
+	width: 180px;
+	height: 30px;
+	line-height: 30px;
+}
+/*회원전화 넓이 조정*/
+tr:nth-child(3) input {
+	width: 230px;
+}
+/*회원주소 넓이 조정*/
+tr:nth-child(4) input {
+	width: 300px;
+}
+tr:last-child {
+	text-align: center;
+	height: 45px;
+}
+tr:last-child input {
+	width: 90px;
+	height: 30px;
+	line-height: 30px;
+}
+
+
+
