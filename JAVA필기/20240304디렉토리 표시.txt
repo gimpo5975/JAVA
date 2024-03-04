@@ -1,0 +1,154 @@
+1. 디렉토리 표시
+   windows : \(역슬래시 사용) 
+      c:\test\aa.txt
+      c:\\test\\aa.txt
+      ""안에 파일 경로를 넣을 때 주의 필요
+      ""안에서는 \가 제어문자로 인식이 됨
+      "" 안에 파일 경로를 설정 : \\
+
+   windows10 버전 이상
+      c:\\test\\aa.txt
+      c:/test/aa.txt
+
+   mac : /(슬래시)
+      c:/test/aa.txt
+
+2. 절대경로와 상대경로
+   절대 경로 : 위치가 고정
+      c:/test/aa.txt
+      c:\tst\aa.txt
+   상대 경로 : 현재 작업하는 파일을 기준으로 경로를 설정
+      ./ : 자신이 속해 있는 곳(폴더=디렉토리)
+      .\,  .\\
+      ../ : 현재 자신이 속한 폴더의 상위 폴더
+      ..\\, ..\
+
+3. 문자셋
+   EUR_KR : 국가 표준 문자셋(한국산업규격으로 지정된 한국어 문자 집합)
+      한글/한자 2byte, 영문/숫자/특수문자 : 1byte
+   
+   S949 : 마이크로소프트사, 한글 + EUC-KR에 빠진 한글 완성형 코드 8,822자 추가
+      비표준
+       한글/한자2byte, 영문 특수문자 - 1byte
+   
+   UTF-8 : 한글/한자 - 3byte, 영문/숫자/특수문자 - 1byte
+      가변 길이 문자 인코딩 방식(1 ~ 4byte)
+      웹서버, 데이터베이스, 리눅스, mac시스템의 기본 인코딩 방식
+
+   UTF-16 : 한글, 영어, 숫자, 특수문자 모두 2byte
+      고정 길이 문자 인코딩 방식
+
+   ASCII : 영문자, 특수문자, 숫자, 제어코드에 코드를 부여한 것, 1byte
+      미국정보교환표준부호(American Standard Code fo Information Interchange)
+
+   유니코드(UNICODE) : 세계 만국 공통어
+      하나의 문자셋에 국가별 모든 문자셋 통합
+
+   자바의 문자셋(Charset) : java.nio.charset.Charset 클래스로 정의되어 있음
+
+====================
+▣ 데이터 입출력
+   자바는 입력 스트림과 출력 스트림을 통해 데이터를 입출력함
+   자바에서 데이터 입출력과 관련된 라이브러리 : java.io 패키지
+
+▣ 입출력 스트림
+   1. 스트림(Stream) : 단방향으로 데이터가 흐르는 것
+
+         입력 스트림      출력 스트림
+      출발지   ------------->  프로그램  -------------> 도착지
+
+   2. 바이트 스트림 : 그림, 멀티미디어, 문자 등 모든 종류의 데이터를 입출력할 때 사용
+      InputStream : 추상클래스
+         XXXInputStream
+      OutputStream : 추상클래스
+         XXXOutputStream
+
+      1) 바이트 출력 스트림 : OutputStream
+         메소드
+         void write(int b)    1byte룰 출력,  매개값 int(4byte)에서 끝 1byte만 출력
+ 
+         void write(byte[] b)    매개값으로 주어진 배열b의 모든 바이트를 출력
+
+         void write(byte[] b, int off, int len) 
+                  매개값으로 주어진 배열 b[off] 부터 len 개의 바이트 출력
+
+         void  flush()      출력 버퍼에 잔류하는 모든 바이트를 출력
+                  OutputStream은 내부에 작은 버퍼 가지고 있음
+                  write() 메소드 호출되면 버퍼에 바이트를 우선 저장하고
+                  버퍼가 차면 순서대로 바이트를 출력
+                  flush() 메소드는 내부 버퍼에 잔류하는 모든 바이트를 출력하고
+                  버퍼를 비우는 역할
+
+         void  close()      출력 스트림을 닫고 사용 메모리 해제
+
+      2) 바이트 입력 스트림 : InutStream
+         메소드
+         int  read()       1byte를 읽은 후 읽은 바이트를 리턴
+                  1byte를 읽고 int(4byte) 타입을 리턴, 4byte 중 끝 1byte에만 데이터 있음
+                  더 이상 입력 스트림으로부터 바이트 읽을 수 없으면 -1을 리턴
+
+         int  read(byte[] b)   읽은 바이트를 매개값으로 주어진 배열에 저장 후 읽은 바이트 수를 리턴
+
+         void close()       입력 스트림을 닫고 사용 메모리 해제
+
+   3. 문자 스트림 : 문자만 입출력할 때 사용
+      Reader
+         XXXReader
+      Writer
+         XXXWriter
+
+      1) 문자 출력 
+         메소드
+         void write(int c)             매개값으로 주어진 한 문자를 출력
+         void write(char[] cbuf)             매개값으로 주어진 배열의 모든 문자를 출력
+         void write(char[] cbuf, int off, int len)    매개값으로 주어진 배열에서 cbuf[off]부터 len개까지의 문자를 출력
+         void write(String str)             매개값으로 주어진 문자열을 출력
+         void write(String str, int off, int len)      매개값으로 주어진 문자열에서 off 순번부터 len까지의 문자를 출력
+         void flush()               버퍼에 잔류하는 모든 문자를 출력
+         void  close()               출력 스트림을 닫고 사용 메모리를 해제
+
+      2) 문자 읽기
+         메소드
+         void read()      1개 문자를 읽고 리턴
+         int   read(char[] cbuf)   읽은 문자들을 매개값으로 주어진 문자 배열에 저장하고 읽은 문자 수를 리턴
+         void  close()      입력 스트림을 닫고, 사용 메모리 해제
+
+
+   4. 보조 스트림
+      다른 스트림과 연결되어 여러 가지 편리한 기능을 제공해주는 스트림
+      보조스트림은 자체적으로 입출력을 수행할 수 없기 때문에 입출력 소스로부터 직접
+      생성된 입출력 스트림에 연결해서 사용해야 함
+   
+      입출력 스트림에 보조 스트림을 연결하려면 보조 스트림을 생성할 때 생성자 매개값으로 입출력 스트림을 제공
+         보조스트림 변수 = new 보조스트림(입출력스트림);
+
+         InputStream is = new FileInputStream("....");
+         InputStreamReader reader = new InputStreamReader( is );
+
+
+         InputStream is = new FileInputStream("....");
+         InputStreamReader reader = new InputStreamReader( is );
+         BufferedReader br = new BufferedReader( reader );
+      
+
+
+      1) 보조 스트림
+         InputStreamReader         바이트 스트림을 문자 스트림으로 변환
+
+         BufferedInputStream,         입출력 성능 향상
+         BufferedOutputStream,
+         BufferedReader,
+         BufferedWriter
+
+         DataInputStream, DataOutputStream   기본타입 데이터 입출력
+
+         PrintStream, PrintWriter         줄바꿈 처리 및 형식화된 문자열 출력
+         ObjectInputStream, ObjectOutputStream   객체 입출력
+
+      2) 문자 변환 스트림
+         바이트 스트림에서 입출력할 데이터가 문자라면 문자 스트림(Reader와 Writer)로 변환해서
+         사용하면 좋음.  문자로 바로 입출력하는 편리함이 있고, 문자셋의 종류를 지정할 수 있기 때문
+
+
+
+
