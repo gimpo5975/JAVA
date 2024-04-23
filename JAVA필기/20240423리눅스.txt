@@ -1,0 +1,141 @@
+1. 사용자와 사용자 그룹
+   - 리눅스는 다중 사용자 시스템(Multi-user-System)
+      1대의 리눅스에 사용자 여러 명이 동시에 접속해서 사용할 수 있는 시스템
+   - 리눅스 설치하면 root가 생성 : superuser
+     root 사용자에게는 시스템의 모든 작업을 실행할 수 있는 권한이 있음
+      시스템에 접속할 수 있는 사용자를 생성할 수 있는 권한도 있음
+
+
+   vi /etc/passwd
+      사용자이름:암호:사용자ID:사용자가소속된그룹ID:추가정보:홈디렉토리:기본 쉘
+
+      root:x:0:0:root:/root:/bin/bash
+      사용자 이름 : root
+      암호 : x - /etc/shadow 이곳에 비밀번호가 지정되어 있다는 의미
+      0 : root사용자 Id
+      0 : root 그룹ID
+      root: 추가 정보 - 전체이름, 사무실 호수, 직장전화번호, 집 전화번호, 기타
+         로 모두 생략 가능
+      /root: : 홈 디렉토리
+      /bin/bash : 기본 쉘
+
+   - 사용자 만들기 
+      사용자 그룹을 먼저 만들고 사용자를 만든다.
+      * adduser : 새로운 사용자 추가
+         adduser 사용자명
+      * 사용자가 생성 되었는지 확인 :  tail /etc/passwd
+         tail : 끝에서 부터 10개까지 내용을 확인할 수 있음
+         tail -5 /etc/passwd  :  끝에서부터 5개를 확인
+      * 그룹 확인
+         tail -5 /etc/group
+      * 암호 확인 
+         tail -5 /etc/shadow
+
+      * userdel : 사용자 삭제
+            userdel 사용자이름  - 사용자 삭제, 단, 홈 directory는 삭제되지 않음
+            userdel -r 사용자이름 - 사용자를 삭제하면서 home directory까지 함께 삭제
+      * passwd : 사용자의 비밀 번호 변경
+
+      * chage : 사용자의 암호를 주기적으로 변경하도록 설정(Change Age의 약자)
+         chage -l 사용자 :  사용자에 설정된 사항 확인
+         chage -m 최소로사용할수있는날짜 사용자 : 사용자에 설정한 암호를 사용해야 하는 최소일자
+            (chage -m 2 usertets1 :  변경 후 최소 2일은 사용해야 함)
+         chage -M 사용일수 사용자 : 사용자에 설정한 암호를 사용할 수 있는 최대 일자
+            chage -M 30 usertest1
+         chage -E 년/월/일 사용자 : 사용자에 설정한 암호가 만료되는 날짜(즉, 이 날짜까지만 사용할 수 있음)
+         chage -W 기간 사용자 : 사용자에 설정한 암호가 만료되기 전에 경고하는 기간
+                  기간을 설정하지 않으면 기본값은 7일
+
+
+   - 사용자 암호 
+      /etc/shadow 
+
+   - 사용자 그룹 
+      /etc/group
+      
+      * groups : 사용자가 소속된 그룹을 보여줌
+      * groupadd : 새로운 그룹을 생성
+         groupadd 그룹명  : 그룹을 생성
+            groupadd usergrouptest1
+         groupadd --gid 그룹아이디 그룹명 : 그룹을 생성하면서 그룹 id를 지정
+            groupadd --gid 3333 usergroptest2
+      * groupdel : 그룹을 삭제
+      * groupmod : 그룹의 속성을 변경
+      * gpasswd  : 그룹의 암호를 설정하거나 그룹 관리를 수행
+      * chgrp : 그룹을 변경
+
+2. 소유권과 허가권
+      ls -l
+
+      -rw-r--r-- 1 root root   22   4월 22일 12:10 a.txt
+      drwxr-xr-x 3 root root 4096   4월 22일 10:25 abc
+      파일유형파일허가권 링크수 파일소유자이름 파일소유그룹이름 파일크기 마지막변경날짜 시간 파일명 또는 directory명
+
+
+   1) 파일/디렉토리 유형 (ls -l /dev | less)
+      
+      - : 파일
+      d : directory 
+
+      b : 저장장치(block divice) , 하드디스크, cd/dvd,플로피 디스크 등
+      c : 입출력 장치 ,  마우스, 키보드, 프린터 등...
+      l : 링크
+
+   2) 파일, 디렉토리 소유권과 허가권
+      소유자: user
+      그룹 : group
+      기타(소유자, 그룹 이외 사용자) : other
+      
+      r : read, 읽기 권한, 4
+      w : write, 쓰기 권한, 2
+      x : execute, 실행 권한, 1
+
+      + : 권한을 허가
+      - : 권한을 제거
+
+      rwx : 읽기, 쓰기, 실행 권한 모두,   7
+      rw- : 읽기, 쓰기 권한만있고 실행권한은 없음, 6
+      r-- : 읽기 권한만, 4
+
+      --x : 실행권한만, 1
+      -wx : 쓰기와 실행권한만, 3
+
+      -rw-r--r--  : 이 파일은 user는 읽기쓰기권한만, group은 읽기 권한만, other는 읽기권한만
+                 644
+
+      rwxrwxrwx : 모두가 읽기, 쓰기, 실행권한을 가지도록 설정
+         chmod 777 a.txt : a.txt파일에 대해 user, group, other사용자가  
+               읽기, 쓰기, 실행권한을 가지도록 설정
+
+
+         chmod 755 b.txt
+         chmod u+x a.txt
+         chmod g+wx b.txt
+         chmod o+x a.txt
+       whoami : 현재 사용자가 누구인지 알려줌
+       ./파일명  : 현재 디렉토리의 파일을 실행
+            ./ 현재 디렉토리  
+
+
+
+        3) 파일/directory의 권한 변경
+      chmod : 허가권을 변경, 이 명령어는 root 사용자 또는 
+         해당 파일의 소유자만 실행할 수 있음
+         파일의 허가권을 실행할 수 있도록 설정되어 있어도
+         파일이 실제로 실행 가능한 코드가 아니라면 실행 시 오류 발생
+
+   
+   4) 파일 소유권
+      - 파일을 소유한 사용자와 그룹을 의미
+      - chown 새로운사용자명 파일명
+        chownn 새로운사용자명.새로운그룹이름 파일명
+      
+        a.txt 파일을 소유한 사용자가 root
+                소유한 그룹도 root
+         
+        a.txt 파일의 소유권 usertest1에게 
+        chown usertest1 a.txt
+        chown usertest1.usertest1 a.txt
+
+        그룹만 변경
+        chgrp usertest2 a.txt   => a.txt의 그룹을 usertest2로 변경
